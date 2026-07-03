@@ -2,234 +2,881 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KVデータ一覧</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>3秒AIキャディ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
-  .container { max-width: 700px; margin: 0 auto; }
-  h1 { text-align: center; color: #2c3e50; font-size: 20px; margin-bottom: 24px; }
-  .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-  h2 { font-size: 15px; color: #555; margin: 0 0 16px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-  label { font-size: 13px; color: #666; display: block; margin-bottom: 6px; }
-  input, select { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; margin-bottom: 12px; }
-  button { width: 100%; padding: 12px; background: #3498db; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; margin-bottom: 8px; }
-  button:hover { background: #2980b9; }
-  button:disabled { background: #bdc3c7; cursor: not-allowed; }
-  .btn-green { background: #27ae60; }
-  .btn-green:hover { background: #219a52; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
-  th { background: #f5f5f5; padding: 8px 6px; text-align: left; border-bottom: 2px solid #ddd; color: #555; }
-  td { padding: 8px 6px; border-bottom: 1px solid #eee; vertical-align: top; word-break: break-all; }
-  tr:hover { background: #fafafa; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
-  .badge-green { background: #eafaf1; color: #1a5e35; }
-  .badge-red { background: #fdf2f2; color: #922b21; }
-  .badge-blue { background: #eaf4fd; color: #1a4e8c; }
-  .mono { font-family: monospace; font-size: 11px; }
-  .summary { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-  .summary-item { background: #f8f9fa; border-radius: 8px; padding: 10px; flex: 1; min-width: 80px; text-align: center; }
-  .summary-item .num { font-size: 22px; font-weight: bold; color: #2c3e50; }
-  .summary-item .lbl { font-size: 11px; color: #888; margin-top: 2px; }
-  .empty { text-align: center; color: #aaa; padding: 20px; }
-  .error-msg { color: #e74c3c; font-size: 13px; margin-top: 8px; min-height: 20px; }
-  .tip { font-size: 11px; color: #888; margin-bottom: 8px; line-height: 1.6; }
+:root{
+  --green-deep:#122E24;
+  --green:#25543F;
+  --green-mid:#3E7A5C;
+  --cream:#F4EFE2;
+  --paper:#FBF8F1;
+  --ink:#1B1A16;
+  --flag:#C1442D;
+  --sand:#C79A56;
+  --water:#3C6E93;
+  --line:#D8D0BB;
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--green-deep);
+  color:var(--ink);
+  font-family:"Noto Sans JP",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.app{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--cream);
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  background:
+    radial-gradient(circle at 85% -10%, rgba(255,255,255,0.06), transparent 55%),
+    linear-gradient(180deg, var(--green-deep) 0%, var(--green) 100%);
+  color:var(--paper);
+  padding:30px 22px 26px;
+  position:relative;
+  overflow:hidden;
+}
+.hero:after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:6px;
+  background:repeating-linear-gradient(90deg, var(--paper) 0 14px, transparent 14px 26px);
+  opacity:.18;
+}
+.hero .eyebrow{
+  font-family:"Oswald",sans-serif;
+  letter-spacing:.18em;
+  font-size:12px;
+  text-transform:uppercase;
+  color:var(--sand);
+  margin:0 0 6px;
+}
+.hero h1{
+  font-family:"Oswald",sans-serif;
+  font-size:34px;
+  font-weight:700;
+  margin:0 0 8px;
+  line-height:1.15;
+}
+.hero p{
+  margin:0;
+  font-size:13.5px;
+  color:#DCE6DE;
+  line-height:1.7;
+}
+
+/* ---------- SECTION SHELL ---------- */
+.section{
+  padding:20px 22px;
+  border-bottom:1px solid var(--line);
+}
+.section h2{
+  font-family:"Oswald",sans-serif;
+  font-size:14px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin:0 0 4px;
+  display:flex; align-items:center; gap:8px;
+}
+.section h2 .num{
+  font-size:11px;
+  background:var(--green);
+  color:var(--paper);
+  width:18px;height:18px;
+  border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:"Oswald",sans-serif;
+}
+.section .desc{
+  font-size:12px;
+  color:#6b6558;
+  margin:0 0 14px;
+}
+
+/* ---------- PROFILE ---------- */
+#profile-toggle{
+  width:100%;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13.5px;font-weight:500;
+  cursor:pointer;
+  color:var(--ink);
+}
+#profile-toggle .chev{transition:transform .2s;color:var(--green);font-family:"Oswald",sans-serif;}
+#profile-toggle.open .chev{transform:rotate(180deg);}
+#profile-body{display:none; margin-top:14px;}
+#profile-body.open{display:block;}
+
+.club-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
+.club-table th{
+  font-size:10.5px;color:#8a8371;font-weight:500;text-align:left;
+  padding:0 4px 6px;border-bottom:1px solid var(--line);
+}
+.club-table td{padding:4px;vertical-align:middle;}
+.club-table input[type=text]{width:48px;}
+.club-table select{width:64px;}
+.club-table input, .club-table select{
+  font-family:"Oswald",sans-serif;
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:6px 4px;
+  font-size:12.5px;
+  background:var(--paper);
+  color:var(--ink);
+}
+.club-table .use-cell{text-align:center;}
+.club-table .rm{
+  background:none;border:none;color:#b7ab8f;font-size:15px;cursor:pointer;padding:2px 6px;
+}
+#add-club{
+  font-size:12px;color:var(--green);background:none;border:1px dashed var(--green-mid);
+  border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:500;
+}
+
+.miss-group{margin-bottom:12px;}
+.miss-group .cat{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  font-size:12px;padding:6px 11px;border-radius:20px;
+  border:1px solid var(--line);background:var(--paper);color:#6b6558;cursor:pointer;
+  user-select:none; white-space:nowrap;
+}
+.chip.active{
+  background:var(--flag);border-color:var(--flag);color:#fff;font-weight:500;
+}
+
+/* ---------- MODE TABS ---------- */
+.mode-tabs{
+  display:flex;gap:8px;padding:16px 22px 0;
+}
+.mode-tab{
+  flex:1;text-align:center;padding:11px 8px;border-radius:10px 10px 0 0;
+  font-size:13px;font-weight:700;cursor:pointer;
+  background:var(--line);color:#78715f;
+  font-family:"Oswald",sans-serif;letter-spacing:.03em;
+}
+.mode-tab.active{background:var(--green);color:var(--paper);}
+
+/* ---------- FORM ---------- */
+.field{margin-bottom:12px;}
+.field label{
+  display:block;font-size:12px;color:#6b6558;margin-bottom:5px;font-weight:500;
+}
+.field select, .field input[type=number]{
+  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);font-size:14.5px;color:var(--ink);font-family:"Noto Sans JP",sans-serif;
+}
+.slider-field{display:flex;align-items:center;gap:12px;}
+.slider-field input[type=range]{flex:1;margin:0;}
+.slider-value{
+  font-family:"Oswald",sans-serif;font-weight:700;font-size:16px;color:var(--green-deep);
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:7px 10px;min-width:60px;text-align:center;white-space:nowrap;
+}
+.slider-value span{color:var(--flag);}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;border-radius:999px;outline:none;cursor:pointer;
+  background:linear-gradient(90deg, var(--green) 0%, var(--green) var(--fill,50%), var(--line) var(--fill,50%), var(--line) 100%);
+}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:transparent;}
+input[type=range]::-moz-range-track{height:6px;border-radius:999px;background:var(--line);}
+input[type=range]::-moz-range-progress{height:6px;border-radius:999px;background:var(--green);}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--flag);border:3px solid var(--paper);
+  box-shadow:0 2px 5px rgba(0,0,0,.3);margin-top:-8px;cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--flag);border:3px solid var(--paper);
+  box-shadow:0 2px 5px rgba(0,0,0,.3);cursor:pointer;
+}
+.hz-dist-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.hz-dist-row .hz-dist-label{font-size:11px;color:#6b6558;white-space:nowrap;}
+.hz-dist-row .slider-value{font-size:13px;padding:5px 8px;min-width:46px;}
+.field .unit{
+  font-family:"Oswald",sans-serif;
+}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px;}
+.hazard-block{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  padding:10px 12px;margin-bottom:8px;
+}
+.hazard-block .label{font-size:11.5px;color:var(--sand);font-weight:700;margin-bottom:6px;}
+.hazard-block select{
+  width:100%;padding:8px 6px;border:1px solid var(--line);border-radius:8px;
+  background:var(--paper);font-size:12.5px;color:var(--ink);font-family:"Noto Sans JP",sans-serif;
+}
+
+/* ---------- DIAGRAM ---------- */
+.diagram-wrap{padding:6px 22px 20px;}
+.diagram{
+  position:relative;
+  height:64px;
+  background:linear-gradient(180deg,#EAF2E7,#DCEAD6);
+  border-radius:12px;
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+.diagram .track{
+  position:absolute;left:14px;right:14px;top:50%;
+  height:3px;background:#B9C9B4;transform:translateY(-50%);
+  border-radius:2px;
+}
+.diagram .tee, .diagram .pin{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  font-family:"Oswald",sans-serif;font-size:10px;font-weight:700;color:var(--green);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.diagram .tee{left:14px;}
+.diagram .pin{right:14px;left:auto;transform:translate(50%,-50%);}
+.diagram .dot{width:9px;height:9px;border-radius:50%;background:var(--green);border:2px solid var(--paper);}
+.diagram .marker{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  font-size:16px;
+}
+.diagram .marker.bunker{color:var(--sand);}
+.diagram .marker.water{color:var(--water);}
+.diagram .marker.ob{color:var(--flag);font-size:11px;font-weight:700;font-family:"Oswald",sans-serif;}
+.diagram .ball{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  width:12px;height:12px;border-radius:50%;
+  background:#fff;border:2px solid var(--flag);
+  box-shadow:0 0 0 3px rgba(193,68,45,0.15);
+  display:none;
+  transition:left .5s cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------- CTA ---------- */
+.cta-wrap{padding:4px 22px 24px;}
+#ask-btn{
+  width:100%;padding:16px;border:none;border-radius:14px;
+  background:var(--flag);color:#fff;
+  font-family:"Oswald",sans-serif;font-size:17px;font-weight:700;letter-spacing:.04em;
+  cursor:pointer;
+  box-shadow:0 6px 0 #8f3120;
+}
+#ask-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #8f3120;}
+#ask-btn:disabled{background:#b7ab8f;box-shadow:0 6px 0 #8a8067;cursor:default;}
+
+/* ---------- RESULT ---------- */
+#result{padding:0 22px 34px;display:none;}
+.result-card{
+  background:var(--green-deep);
+  color:var(--paper);
+  border-radius:16px;
+  padding:22px 20px;
+  position:relative;
+  overflow:hidden;
+}
+.result-card:before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 100% 0%, rgba(255,255,255,.08), transparent 60%);
+}
+.rc-row{position:relative;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;}
+.rc-club{font-family:"Oswald",sans-serif;font-size:38px;font-weight:700;line-height:1;}
+.rc-swing{font-size:13px;color:var(--sand);font-weight:700;text-align:right;}
+.rc-tags{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.rc-tag{
+  font-size:11.5px;padding:5px 10px;border-radius:20px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+}
+.rc-tag.risk-低{color:#9AD8B4;}
+.rc-tag.risk-普通{color:#F0D68C;}
+.rc-tag.risk-注意, .rc-tag.risk-高{color:#F0A88C;}
+.rc-reason{
+  position:relative;font-size:13.5px;line-height:1.75;color:#E6EFE6;
+  border-top:1px dashed rgba(255,255,255,.25);padding-top:12px;
+}
+#ai-error{
+  display:none;font-size:12.5px;color:var(--flag);margin-top:10px;
+}
+
+/* small helpers */
+.hint{font-size:11px;color:#9a927c;margin-top:2px;}
+footer.note{padding:16px 22px 40px;font-size:11px;color:#8a8371;line-height:1.7;}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>📊 KVデータ一覧ツール</h1>
+<div class="app">
 
-  <div class="card">
-    <h2>⚙️ 設定</h2>
-    <p class="tip">※ APIトークンはCloudflare → マイプロフィール → APIトークン から取得できます。</p>
-    <label>APIトークン</label>
-    <input type="password" id="apiToken" placeholder="Cloudflare APIトークン" />
-    <label>表示するデータ</label>
-    <select id="dataType">
-      <option value="coupon">クーポン一覧（coupon:プレフィックス）</option>
-      <option value="key">アクセスキー一覧（key:プレフィックス）</option>
-      <option value="all">すべて</option>
-    </select>
-    <button id="btnLoad" onclick="loadData()">データを取得する</button>
-    <div class="error-msg" id="errorMsg"></div>
+  <div class="hero">
+    <p class="eyebrow">3-Second AI Caddy</p>
+    <h1>3秒AIキャディ</h1>
+    <p>残り距離とハザードを入れるだけ。番手・強さ・狙いどころ・理由を、あなたの飛距離とクセで即提案します。</p>
   </div>
 
-  <div class="card" id="couponCard" style="display:none;">
-    <h2>🎟️ クーポン一覧</h2>
-    <div class="summary" id="couponSummary"></div>
-    <div id="couponTable"></div>
-    <button class="btn-green" onclick="exportCSV('coupon')" style="margin-top:12px;">CSVエクスポート</button>
+  <!-- PROFILE -->
+  <div class="section" id="profile-section">
+    <button id="profile-toggle">
+      <span>👤 マイプロフィール(クラブ・飛距離・クセ)</span>
+      <span class="chev">▾</span>
+    </button>
+    <div id="profile-body">
+      <p class="desc">キャリー/ランを登録した使用クラブだけがAIの提案候補になります。</p>
+      <table class="club-table">
+        <thead>
+          <tr><th>クラブ</th><th>キャリー</th><th>ラン</th><th>使用</th><th></th></tr>
+        </thead>
+        <tbody id="club-rows"></tbody>
+      </table>
+      <button id="add-club" type="button">＋ クラブを追加</button>
+
+      <div style="margin-top:18px;">
+        <div class="miss-group">
+          <div class="cat">ドライバーのクセ</div>
+          <div class="chips" data-cat="driver">
+            <span class="chip" data-v="右にミス">右にミス</span>
+            <span class="chip" data-v="左にミス">左にミス</span>
+            <span class="chip" data-v="トップ">トップ</span>
+            <span class="chip" data-v="チーピン">チーピン</span>
+          </div>
+        </div>
+        <div class="miss-group">
+          <div class="cat">FW/UTのクセ</div>
+          <div class="chips" data-cat="fw">
+            <span class="chip" data-v="トップ">トップ</span>
+            <span class="chip" data-v="ダフリ">ダフリ</span>
+          </div>
+        </div>
+        <div class="miss-group">
+          <div class="cat">アイアンのクセ</div>
+          <div class="chips" data-cat="iron">
+            <span class="chip" data-v="ショート">ショート</span>
+            <span class="chip" data-v="ダフリ">ダフリ</span>
+            <span class="chip" data-v="引っ掛け">引っ掛け</span>
+          </div>
+        </div>
+        <div class="miss-group">
+          <div class="cat">アプローチのクセ</div>
+          <div class="chips" data-cat="approach">
+            <span class="chip" data-v="ザックリ">ザックリ</span>
+            <span class="chip" data-v="トップ">トップ</span>
+            <span class="chip" data-v="ショート">ショート</span>
+            <span class="chip" data-v="オーバー">オーバー</span>
+          </div>
+        </div>
+      </div>
+      <p class="hint">入力内容はこの端末に自動保存されます。</p>
+    </div>
   </div>
 
-  <div class="card" id="keyCard" style="display:none;">
-    <h2>🔑 アクセスキー一覧</h2>
-    <div class="summary" id="keySummary"></div>
-    <div id="keyTable"></div>
-    <button class="btn-green" onclick="exportCSV('key')" style="margin-top:12px;">CSVエクスポート</button>
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <div class="mode-tab active" data-mode="long">ロングホール<br>(2打目以降)</div>
+    <div class="mode-tab" data-mode="short">ショートホール<br>(Par3ティー)</div>
   </div>
+
+  <!-- LONG MODE -->
+  <div class="section" id="long-form">
+    <h2><span class="num">1</span>状況を入力</h2>
+    <div class="field">
+      <label>ピンまでの残り距離</label>
+      <div class="slider-field">
+        <input type="range" id="l-dist" min="100" max="200" step="10" value="150" style="--fill:50%">
+        <div class="slider-value"><span id="l-dist-val">150</span>yd</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>ライ</label>
+        <select id="l-lie">
+          <option>フェアウェイ</option><option>ラフ</option><option>ベアグラウンド</option><option>バンカー</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>傾斜</label>
+        <select id="l-slope">
+          <option>平坦</option><option>つま先上がり</option><option>つま先下がり</option><option>左足上がり</option><option>左足下がり</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>風向き</label>
+        <select id="l-wind-dir">
+          <option>なし</option><option>アゲンスト(向かい)</option><option>フォロー(追い)</option><option>左から右</option><option>右から左</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>風の強さ</label>
+        <select id="l-wind-str"><option>弱</option><option>中</option><option>強</option></select>
+      </div>
+    </div>
+
+    <div id="l-hazards"></div>
+
+    <p class="hint" style="margin-top:8px;">ハザードは最大3つまで登録できます。</p>
+  </div>
+
+  <!-- SHORT MODE -->
+  <div class="section" id="short-form" style="display:none;">
+    <h2><span class="num">1</span>状況を入力</h2>
+    <div class="field">
+      <label>ピンまでの距離</label>
+      <div class="slider-field">
+        <input type="range" id="s-dist" min="100" max="200" step="10" value="150" style="--fill:50%">
+        <div class="slider-value"><span id="s-dist-val">150</span>yd</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>高低差</label>
+        <select id="s-elev"><option>フラット</option><option>打ち上げ</option><option>打ち下ろし</option></select>
+      </div>
+      <div class="field">
+        <label>高低差(目安m)</label>
+        <select id="s-elev-m">
+          <option value="0">0m</option>
+          <option value="1">1m</option>
+          <option value="2">2m</option>
+          <option value="3">3m</option>
+          <option value="4">4m</option>
+          <option value="5" selected>5m</option>
+          <option value="6">6m</option>
+          <option value="7">7m</option>
+          <option value="8">8m</option>
+          <option value="9">9m</option>
+          <option value="10">10m</option>
+          <option value="12">12m</option>
+          <option value="15">15m</option>
+          <option value="20">20m</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>風向き</label>
+        <select id="s-wind-dir">
+          <option>なし</option><option>アゲンスト(向かい)</option><option>フォロー(追い)</option><option>左から右</option><option>右から左</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>風の強さ</label>
+        <select id="s-wind-str"><option>弱</option><option>中</option><option>強</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>手前バンカー</label>
+        <select id="s-bunker-front"><option>なし</option><option>あり</option></select>
+      </div>
+      <div class="field">
+        <label>奥バンカー</label>
+        <select id="s-bunker-back"><option>なし</option><option>あり</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>池</label>
+        <select id="s-water"><option>なし</option><option>手前</option><option>左</option><option>右</option><option>グリーン奥</option></select>
+      </div>
+      <div class="field">
+        <label>OB</label>
+        <select id="s-ob"><option>なし</option><option>左</option><option>右</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>グリーンの広さ</label>
+        <select id="s-green-size"><option>普通</option><option>狭い</option><option>広い</option></select>
+      </div>
+      <div class="field">
+        <label>ピン位置</label>
+        <select id="s-pin-pos"><option>中央</option><option>手前</option><option>奥</option><option>左</option><option>右</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAGRAM -->
+  <div class="diagram-wrap">
+    <div class="diagram" id="diagram">
+      <div class="track"></div>
+      <div class="tee"><div class="dot"></div>現在地</div>
+      <div class="pin">🚩<span>ピン</span></div>
+      <div class="ball" id="ball-marker"></div>
+    </div>
+  </div>
+
+  <div class="cta-wrap">
+    <button id="ask-btn">⛳ AIキャディに聞く</button>
+    <div id="ai-error"></div>
+  </div>
+
+  <div id="result">
+    <div class="result-card">
+      <div class="rc-row">
+        <div>
+          <div class="rc-club" id="rc-club">—</div>
+        </div>
+        <div class="rc-swing" id="rc-swing"></div>
+      </div>
+      <div class="rc-tags">
+        <span class="rc-tag" id="rc-target"></span>
+        <span class="rc-tag" id="rc-risk"></span>
+        <span class="rc-tag" id="rc-next"></span>
+      </div>
+      <div class="rc-reason" id="rc-reason"></div>
+    </div>
+  </div>
+
+  <footer class="note">
+    ※ AIキャディの提案は目安です。最終的な club 選択とショットはご自身の判断で行ってください。<br>
+    ※ プロフィール情報はこの端末のブラウザにのみ保存され、外部には送信されません(AI提案時のみ質問内容と一緒に送信されます)。
+  </footer>
+
 </div>
 
 <script>
-  const PROXY_URL = 'https://kv-proxy.elcojpn2021.workers.dev';
-  const ACCOUNT_ID = '53a52c2dc176814fd582dccb2f6a316d';
-  const NAMESPACE_ID = 'bc75cdb1e5c04eb4b55efa46cde95c67';
+const WORKER_URL = "https://YOUR-WORKER-SUBDOMAIN.workers.dev/advice"; // ← デプロイ後にご自身のWorker URLに書き換えてください
 
-  let couponData = [];
-  let keyData = [];
+const DEFAULT_CLUBS = [
+  {name:"Dr", carry:210, run:20, use:true},
+  {name:"3W", carry:195, run:15, use:true},
+  {name:"5W", carry:180, run:10, use:true},
+  {name:"4U", carry:170, run:10, use:true},
+  {name:"5U", carry:160, run:10, use:true},
+  {name:"6I", carry:150, run:5, use:true},
+  {name:"7I", carry:140, run:5, use:true},
+  {name:"8I", carry:130, run:5, use:true},
+  {name:"9I", carry:120, run:5, use:true},
+  {name:"PW", carry:110, run:5, use:true},
+  {name:"48°", carry:100, run:5, use:true},
+  {name:"50°", carry:95, run:5, use:true},
+  {name:"52°", carry:90, run:5, use:true},
+  {name:"54°", carry:85, run:0, use:true},
+  {name:"58°", carry:75, run:0, use:true},
+  {name:"60°", carry:70, run:0, use:true},
+];
 
-  function getToken() { return document.getElementById('apiToken').value.trim(); }
+let profile = loadProfile();
+let mode = "long";
 
-  async function cfFetch(path) {
-    const res = await fetch(`${PROXY_URL}?path=${encodeURIComponent(path)}`, {
-      headers: {
-        'X-CF-Token': getToken(),
-        'X-Account-Id': ACCOUNT_ID,
-        'X-Namespace-Id': NAMESPACE_ID,
-      }
-    });
-    return res.json();
+function loadProfile(){
+  try{
+    const raw = localStorage.getItem("aicaddy_profile");
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {clubs: JSON.parse(JSON.stringify(DEFAULT_CLUBS)), misses:{driver:[],fw:[],iron:[],approach:[]}};
+}
+function saveProfile(){
+  localStorage.setItem("aicaddy_profile", JSON.stringify(profile));
+}
+
+/* ---------- PROFILE UI ---------- */
+function distanceOptions(min, max, step, selected){
+  let html = "";
+  const sel = Number(selected);
+  for(let v = max; v >= min; v -= step){
+    html += `<option value="${v}"${v === sel ? " selected" : ""}>${v}yd</option>`;
   }
+  return html;
+}
 
-  async function getValue(key) {
-    const path = `/values/${encodeURIComponent(key)}`;
-    const res = await fetch(`${PROXY_URL}?path=${encodeURIComponent(path)}`, {
-      headers: {
-        'X-CF-Token': getToken(),
-        'X-Account-Id': ACCOUNT_ID,
-        'X-Namespace-Id': NAMESPACE_ID,
-      }
-    });
-    const text = await res.text();
-    try { return JSON.parse(text); } catch { return text; }
-  }
+const clubRows = document.getElementById("club-rows");
 
-  async function listKeys(prefix) {
-    const path = `/keys?prefix=${encodeURIComponent(prefix)}&limit=1000`;
-    const data = await cfFetch(path);
-    if (!data.success) throw new Error(data.errors?.[0]?.message || 'KV取得エラー');
-    return data.result;
-  }
-
-  async function loadData() {
-    const token = getToken();
-    if (!token) {
-      showError('APIトークンを入力してください。');
-      return;
-    }
-    showError('');
-    document.getElementById('btnLoad').disabled = true;
-    document.getElementById('btnLoad').textContent = '取得中...';
-
-    const type = document.getElementById('dataType').value;
-
-    try {
-      if (type === 'coupon' || type === 'all') await loadCoupons();
-      if (type === 'key' || type === 'all') await loadKeys2();
-    } catch (e) {
-      showError('エラー: ' + e.message);
-    } finally {
-      document.getElementById('btnLoad').disabled = false;
-      document.getElementById('btnLoad').textContent = 'データを取得する';
-    }
-  }
-
-  async function loadCoupons() {
-    const keys = await listKeys('coupon:');
-    couponData = [];
-    for (const k of keys) {
-      const val = await getValue(k.name);
-      const couponCode = k.name.replace('coupon:', '');
-      let remaining = null;
-      if (val.accessKey) {
-        try {
-          const keyVal = await getValue(`key:${val.accessKey}`);
-          remaining = (keyVal.limit || 10) - (keyVal.count || 0);
-        } catch (_) {}
-      }
-      couponData.push({
-        coupon: couponCode,
-        created: val.created || '不明',
-        used: val.used || false,
-        usedAt: val.usedAt || null,
-        accessKey: val.accessKey || null,
-        remaining
-      });
-    }
-    couponData.sort((a, b) => b.created.localeCompare(a.created));
-    renderCouponTable(couponData);
-    document.getElementById('couponCard').style.display = 'block';
-  }
-
-  async function loadKeys2() {
-    const keys = await listKeys('key:');
-    keyData = [];
-    for (const k of keys) {
-      const val = await getValue(k.name);
-      keyData.push({
-        accessKey: k.name.replace('key:', ''),
-        issued: val.issued || '不明',
-        count: val.count || 0,
-        remaining: (val.limit || 10) - (val.count || 0),
-        coupon: val.coupon || null
-      });
-    }
-    keyData.sort((a, b) => b.issued.localeCompare(a.issued));
-    renderKeyTable(keyData);
-    document.getElementById('keyCard').style.display = 'block';
-  }
-
-  function renderCouponTable(list) {
-    const used = list.filter(i => i.used).length;
-    const unused = list.filter(i => !i.used).length;
-    document.getElementById('couponSummary').innerHTML = `
-      <div class="summary-item"><div class="num">${list.length}</div><div class="lbl">合計</div></div>
-      <div class="summary-item"><div class="num" style="color:#27ae60;">${unused}</div><div class="lbl">未使用</div></div>
-      <div class="summary-item"><div class="num" style="color:#e74c3c;">${used}</div><div class="lbl">使用済</div></div>
+function renderClubs(){
+  clubRows.innerHTML = "";
+  profile.clubs.forEach((c, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><input type="text" data-i="${i}" data-f="name" value="${c.name}"></td>
+      <td><select data-i="${i}" data-f="carry">${distanceOptions(30,260,5,c.carry)}</select></td>
+      <td><select data-i="${i}" data-f="run">${distanceOptions(0,30,5,c.run)}</select></td>
+      <td class="use-cell"><input type="checkbox" data-i="${i}" data-f="use" ${c.use ? "checked":""}></td>
+      <td><button class="rm" data-i="${i}" type="button">✕</button></td>
     `;
-    if (list.length === 0) { document.getElementById('couponTable').innerHTML = '<div class="empty">データなし</div>'; return; }
-    let html = `<table><tr><th>クーポン</th><th>発行日</th><th>状態</th><th>使用日</th><th>残回数</th></tr>`;
-    list.forEach(i => {
-      const badge = i.used ? '<span class="badge badge-red">使用済</span>' : '<span class="badge badge-green">未使用</span>';
-      html += `<tr><td class="mono">${i.coupon}</td><td>${i.created}</td><td>${badge}</td><td>${i.usedAt||'-'}</td><td style="text-align:center;">${i.remaining!==null?i.remaining+' 回':'-'}</td></tr>`;
+    clubRows.appendChild(tr);
+  });
+}
+renderClubs();
+
+clubRows.addEventListener("input", e => {
+  const i = e.target.dataset.i, f = e.target.dataset.f;
+  if(i===undefined || f!=="name") return;
+  profile.clubs[i].name = e.target.value;
+  saveProfile();
+});
+clubRows.addEventListener("change", e => {
+  const i = e.target.dataset.i, f = e.target.dataset.f;
+  if(i===undefined) return;
+  if(f==="use"){ profile.clubs[i].use = e.target.checked; }
+  else if(f==="carry" || f==="run"){ profile.clubs[i][f] = Number(e.target.value||0); }
+  else return;
+  saveProfile();
+});
+
+clubRows.addEventListener("click", e => {
+  if(e.target.classList.contains("rm")){
+    profile.clubs.splice(Number(e.target.dataset.i),1);
+    saveProfile(); renderClubs();
+  }
+});
+document.getElementById("add-club").onclick = () => {
+  profile.clubs.push({name:"クラブ", carry:100, run:5, use:true});
+  saveProfile(); renderClubs();
+};
+
+document.querySelectorAll(".chips").forEach(group => {
+  const cat = group.dataset.cat;
+  group.querySelectorAll(".chip").forEach(chip => {
+    if(profile.misses[cat] && profile.misses[cat].includes(chip.dataset.v)) chip.classList.add("active");
+    chip.onclick = () => {
+      chip.classList.toggle("active");
+      const arr = profile.misses[cat] || (profile.misses[cat]=[]);
+      const v = chip.dataset.v;
+      const idx = arr.indexOf(v);
+      if(idx>-1) arr.splice(idx,1); else arr.push(v);
+      saveProfile();
+    };
+  });
+});
+
+const profileToggle = document.getElementById("profile-toggle");
+const profileBody = document.getElementById("profile-body");
+profileToggle.onclick = () => {
+  profileToggle.classList.toggle("open");
+  profileBody.classList.toggle("open");
+};
+
+/* ---------- MODE TABS ---------- */
+document.querySelectorAll(".mode-tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".mode-tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    mode = tab.dataset.mode;
+    document.getElementById("long-form").style.display = (mode==="long") ? "block":"none";
+    document.getElementById("short-form").style.display = (mode==="short") ? "block":"none";
+    hideResult();
+    renderDiagram();
+  };
+});
+
+/* ---------- HAZARDS (long mode, up to 3 slots) ---------- */
+const hazardWrap = document.getElementById("l-hazards");
+for(let i=0;i<3;i++){
+  const div = document.createElement("div");
+  div.className = "hazard-block";
+  div.innerHTML = `
+    <div class="label">ハザード${i+1}</div>
+    <div class="row2">
+      <select class="hz-type" data-i="${i}">
+        <option value="">なし</option>
+        <option value="バンカー">バンカー</option>
+        <option value="池">池</option>
+        <option value="OB">OB</option>
+        <option value="林">林</option>
+      </select>
+      <select class="hz-pos" data-i="${i}">
+        <option value="中央">中央</option>
+        <option value="左">左</option>
+        <option value="右">右</option>
+      </select>
+    </div>
+    <div class="hz-dist-row">
+      <span class="hz-dist-label">距離</span>
+      <div class="slider-field">
+        <input type="range" class="hz-dist" data-i="${i}" min="100" max="200" step="10" value="150" style="--fill:50%">
+        <div class="slider-value"><span class="hz-dist-out" data-i="${i}">150</span>yd</div>
+      </div>
+    </div>
+  `;
+  hazardWrap.appendChild(div);
+}
+function updateSliderFill(el){
+  const min = Number(el.min), max = Number(el.max);
+  const pct = ((Number(el.value) - min) / (max - min)) * 100;
+  el.style.setProperty("--fill", pct + "%");
+}
+hazardWrap.addEventListener("input", e => {
+  if(e.target.classList.contains("hz-dist")){
+    const i = e.target.dataset.i;
+    const out = hazardWrap.querySelector(`.hz-dist-out[data-i="${i}"]`);
+    if(out) out.textContent = e.target.value;
+    updateSliderFill(e.target);
+  }
+  renderDiagram();
+});
+hazardWrap.addEventListener("change", renderDiagram);
+hazardWrap.querySelectorAll(".hz-dist").forEach(updateSliderFill);
+
+function wireDistanceSlider(inputId, outId){
+  const el = document.getElementById(inputId);
+  const out = document.getElementById(outId);
+  el.addEventListener("input", () => {
+    out.textContent = el.value;
+    updateSliderFill(el);
+    renderDiagram();
+  });
+  updateSliderFill(el);
+}
+wireDistanceSlider("l-dist", "l-dist-val");
+wireDistanceSlider("s-dist", "s-dist-val");
+
+/* ---------- DIAGRAM ---------- */
+const diagram = document.getElementById("diagram");
+function renderDiagram(){
+  diagram.querySelectorAll(".marker").forEach(m=>m.remove());
+  document.getElementById("ball-marker").style.display = "none";
+  const totalDist = mode==="long"
+    ? Number(document.getElementById("l-dist").value||0)
+    : Number(document.getElementById("s-dist").value||0);
+  if(!totalDist) return;
+
+  if(mode==="long"){
+    hazardWrap.querySelectorAll(".hz-type").forEach(sel => {
+      const i = sel.dataset.i;
+      const type = sel.value;
+      if(!type) return;
+      const dist = Number(hazardWrap.querySelector(`.hz-dist[data-i="${i}"]`).value||0);
+      if(!dist) return;
+      addMarker(dist, totalDist, type);
     });
-    document.getElementById('couponTable').innerHTML = html + '</table>';
+  } else {
+    const front = document.getElementById("s-bunker-front").value;
+    const back = document.getElementById("s-bunker-back").value;
+    const water = document.getElementById("s-water").value;
+    if(front==="あり") addMarker(totalDist*0.85, totalDist, "バンカー");
+    if(back==="あり") addMarker(totalDist*0.97, totalDist, "バンカー");
+    if(water && water!=="なし") addMarker(totalDist*0.9, totalDist, "池");
+  }
+}
+function addMarker(dist, total, type){
+  const pct = Math.max(4, Math.min(96, (dist/total)*100));
+  const el = document.createElement("div");
+  el.className = "marker " + (type==="バンカー"?"bunker":type==="池"?"water":"ob");
+  el.style.left = pct + "%";
+  el.textContent = type==="バンカー" ? "⛱" : type==="池" ? "💧" : type;
+  diagram.appendChild(el);
+}
+function showBallOnDiagram(landedDist, total){
+  const marker = document.getElementById("ball-marker");
+  if(!landedDist || !total) return;
+  const pct = Math.max(4, Math.min(96, (landedDist/total)*100));
+  marker.style.display = "block";
+  requestAnimationFrame(()=>{ marker.style.left = pct + "%"; });
+}
+
+/* ---------- ASK AI ---------- */
+const askBtn = document.getElementById("ask-btn");
+const errorBox = document.getElementById("ai-error");
+
+askBtn.onclick = async () => {
+  errorBox.style.display = "none";
+  hideResult();
+
+  const usedClubs = profile.clubs.filter(c=>c.use && c.name);
+  if(usedClubs.length===0){
+    showError("プロフィールで使用クラブを1本以上登録してください。");
+    return;
   }
 
-  function renderKeyTable(list) {
-    const active = list.filter(i => i.remaining > 0).length;
-    const exhausted = list.filter(i => i.remaining <= 0).length;
-    document.getElementById('keySummary').innerHTML = `
-      <div class="summary-item"><div class="num">${list.length}</div><div class="lbl">合計</div></div>
-      <div class="summary-item"><div class="num" style="color:#27ae60;">${active}</div><div class="lbl">利用中</div></div>
-      <div class="summary-item"><div class="num" style="color:#e74c3c;">${exhausted}</div><div class="lbl">使い切り</div></div>
-    `;
-    if (list.length === 0) { document.getElementById('keyTable').innerHTML = '<div class="empty">データなし</div>'; return; }
-    let html = `<table><tr><th>アクセスキー</th><th>発行日</th><th>使用</th><th>残り</th><th>状態</th></tr>`;
-    list.forEach(i => {
-      const badge = i.remaining > 0 ? '<span class="badge badge-blue">利用中</span>' : '<span class="badge badge-red">使い切り</span>';
-      html += `<tr><td class="mono">${i.accessKey}</td><td>${i.issued}</td><td style="text-align:center;">${i.count}回</td><td style="text-align:center;font-weight:bold;">${i.remaining}回</td><td>${badge}</td></tr>`;
+  const payload = { mode, profile: { clubs: usedClubs, misses: profile.misses } };
+
+  if(mode==="long"){
+    const dist = Number(document.getElementById("l-dist").value||0);
+    if(!dist){ showError("残り距離を入力してください。"); return; }
+    const hazards = [];
+    hazardWrap.querySelectorAll(".hz-type").forEach(sel => {
+      const i = sel.dataset.i;
+      if(!sel.value) return;
+      hazards.push({
+        type: sel.value,
+        distance: Number(hazardWrap.querySelector(`.hz-dist[data-i="${i}"]`).value||0),
+        position: hazardWrap.querySelector(`.hz-pos[data-i="${i}"]`).value
+      });
     });
-    document.getElementById('keyTable').innerHTML = html + '</table>';
+    payload.situation = {
+      remaining_distance: dist,
+      lie: document.getElementById("l-lie").value,
+      slope: document.getElementById("l-slope").value,
+      wind_direction: document.getElementById("l-wind-dir").value,
+      wind_strength: document.getElementById("l-wind-str").value,
+      hazards
+    };
+  } else {
+    const dist = Number(document.getElementById("s-dist").value||0);
+    if(!dist){ showError("ピンまでの距離を入力してください。"); return; }
+    payload.situation = {
+      pin_distance: dist,
+      elevation: document.getElementById("s-elev").value,
+      elevation_m: Number(document.getElementById("s-elev-m").value||0),
+      wind_direction: document.getElementById("s-wind-dir").value,
+      wind_strength: document.getElementById("s-wind-str").value,
+      bunker_front: document.getElementById("s-bunker-front").value,
+      bunker_back: document.getElementById("s-bunker-back").value,
+      water: document.getElementById("s-water").value,
+      ob: document.getElementById("s-ob").value,
+      green_size: document.getElementById("s-green-size").value,
+      pin_position: document.getElementById("s-pin-pos").value
+    };
   }
 
-  function exportCSV(type) {
-    let csv = '', filename = '';
-    if (type === 'coupon') {
-      csv = '\uFEFFクーポンコード,発行日,状態,使用日,残回数\n';
-      couponData.forEach(i => { csv += `${i.coupon},${i.created},${i.used?'使用済':'未使用'},${i.usedAt||''},${i.remaining!==null?i.remaining:''}\n`; });
-      filename = 'coupon_list.csv';
-    } else {
-      csv = '\uFEFFアクセスキー,発行日,使用回数,残回数\n';
-      keyData.forEach(i => { csv += `${i.accessKey},${i.issued},${i.count},${i.remaining}\n`; });
-      filename = 'key_list.csv';
-    }
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
+  askBtn.disabled = true;
+  askBtn.textContent = "🤔 考え中...";
+  try{
+    const res = await fetch(WORKER_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error("サーバーエラー(" + res.status + ")");
+    const data = await res.json();
+    if(data.error) throw new Error(data.error);
+    showResult(data, payload);
+  }catch(e){
+    showError("AIキャディの呼び出しに失敗しました: " + e.message);
+  }finally{
+    askBtn.disabled = false;
+    askBtn.textContent = "⛳ AIキャディに聞く";
   }
+};
 
-  function showError(msg) { document.getElementById('errorMsg').textContent = msg; }
+function showError(msg){
+  errorBox.textContent = msg;
+  errorBox.style.display = "block";
+}
+function hideResult(){
+  document.getElementById("result").style.display = "none";
+}
+function showResult(data, payload){
+  document.getElementById("rc-club").textContent = data.club || "—";
+  document.getElementById("rc-swing").textContent = data.swing || "";
+  document.getElementById("rc-target").textContent = "🎯 " + (data.target || "-");
+  const risk = data.risk || "普通";
+  const riskTag = document.getElementById("rc-risk");
+  riskTag.textContent = "⚠ リスク: " + risk;
+  riskTag.className = "rc-tag risk-" + risk;
+  document.getElementById("rc-next").textContent = "↷ 次打目安: " + (data.next_distance || "-");
+  document.getElementById("rc-reason").textContent = data.reason || "";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").scrollIntoView({behavior:"smooth", block:"nearest"});
+
+  const total = mode==="long" ? payload.situation.remaining_distance : payload.situation.pin_distance;
+  const club = profile.clubs.find(c => c.name === data.club);
+  if(club){
+    const landed = (club.carry||0) + (club.run||0);
+    showBallOnDiagram(Math.min(landed, total*0.98), total);
+  }
+}
+
+renderDiagram();
 </script>
 </body>
 </html>
